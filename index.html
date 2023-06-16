@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Web Engine</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="styles/style.css" rel="stylesheet">
+    <script defer type="module" src="js/index.js"></script>
+</head>
+
+<body>
+
+    <div class="splash-div main">
+
+        <h1>Web Engine</h1>
+        <p>Loading assets...</p>
+
+    </div>
+
+    <div class="login main">
+
+        <div class="account_box">
+            <div class="login_box">
+                <h2>Welcome Back!</h2>
+                <input type="email" required placeholder="Email">
+                <input type="password" required placeholder="Password">
+                <button>Log In</button>
+                <p class="error"></p>
+                <div style="display: block;">
+                <input style="display: inline-block;" id="en-420" type="checkbox">
+                <label style="display: inline-block;" for="en-420">Remember this device</label>
+                </div>
+                <p class="acc_ls">Dont have an account?<a>Get Started</a></p>
+            </div>
+            <div class="signup_box hide">
+                <h2>Get Started</h2>
+                <input type="email" required placeholder="Email">
+                <input type="password" required placeholder="Password">
+                <input type="password" required placeholder="Repeat Password">
+                <button>Get Started!</button>
+                <p class="error"></p>
+                <p class="acc_ls">Already have an account?<a>Login</a></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="dashboard main">
+
+        <div class="dash-bar">
+            <div class="dash-head">
+                <h3>Web Engine</h3>
+            </div>
+            <div class="dash-action">
+                <button id="en-c-elm-bt">Custom Elements</button>
+                <button id="add-project-bt">New Project</button>
+                <button id="imp-project-bt">Import Project</button>
+                <button id="log-out-bt">Log out</button>
+            </div>
+        </div>
+
+        <div class="projects">
+            
+            
+        </div>
+
+        <div id="no-projects" class="hide">
+            <p style="color: rgb(120, 120, 120);">You have no projects stored in cloud</p>
+        </div>
+
+    </div>
+
+    <div class="add-project hide">
+        <div class="panel">
+            <div style="flex-direction: row; justify-content: space-between;">
+                
+            <h4 style="text-align: center;width: 100%;">New Project</h4>
+            <i id="close-panel" class="fi fi-rr-cross-small"></i>
+            </div>
+            <br>
+            <label for="site-name">Site Name:</label>
+            <input id="site-name" placeholder="Site Name">
+            <p class="error"></p>
+            <button id="add-site-bt">Create</button>
+        </div>
+    </div>
+
+</body>
+
+
+
+</html>
