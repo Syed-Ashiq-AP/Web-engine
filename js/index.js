@@ -154,7 +154,7 @@ function down_proj(name) {
 }
 
 function down_web(name) {
-  let new_window = window.open("http://" + location.host + "/engine/download?pid=" + name);
+  let new_window = window.open("http://" + location.host + "web-engine/engine/download?pid=" + name);
 
 }
 
