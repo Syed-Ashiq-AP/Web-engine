@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Web engine - Custom Elements</title>
+    <link rel="icon" type="image/png" href="../img/web engine logo.png">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../styles/engine-ui.css">
+    <script src="../js/engine.js" async defer></script>
+
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+</head>
+
+<body>
+    <pop-up>
+    </pop-up>
+    <splash>
+        <s-logo><img src="../img/web engine logo.png"></s-logo>
+        <s-t>LOADING...</s-t>
+    </splash>
+    <menu>
+        <m-item onclick="copy_element(event)">
+            <i class="fi fi-sr-copy-alt"></i>
+            <p> Copy</p>
+        </m-item>
+        <m-item onclick="paste_element(event)">
+            <i class="fi-sr-paste"></i>
+            <p> Paste</p>
+        </m-item>
+        <m-item onclick="move_to(event)">
+            <i class="fi-sr-arrows"></i>
+            <p> Move to</p>
+        </m-item>
+        <m-item onclick="move_up(event)">
+            <i class="fi-sr-caret-up"></i>
+            <p> Move Above</p>
+        </m-item>
+        <m-item onclick="move_down(event)">
+            <i class="fi-sr-caret-down"></i>
+            <p> Move Below</p>
+        </m-item>
+        <m-item onclick="delete_element(event)" style="color: rgb(226, 52, 52);">
+            <i class="fi fi-sr-trash"></i>
+            <p> Delete</p>
+        </m-item>
+    </menu>
+    <div class="en-top-bars">
+        <div class="en-top-bar-left">
+            <bp onclick="location.href=location.origin" style="margin-top: 10px;"><i style="margin: 0px;"
+                    class="fi fi-sr-angle-left"></i></bp>
+            <divide></divide>
+            <page-details onclick="toggle_dropdown('pg-en-drop')">
+                <pab>
+                    <page-name>Page Name</page-name>
+                </pab>
+                <p-drop>
+                    <i style="font-size: 15px;" class="fi fi-sr-caret-down"></i>
+                </p-drop>
+            </page-details>
+            <page-actions>
+                <pa-action onclick="show_rename_page()">
+                    <i class="fi fi-sr-pencil"></i>
+                </pa-action>
+                <pa-action onclick="rename_page()" style="border-radius: 5px;margin: 5px;display: none;">
+                    <i class="fi fi-sr-check"></i>
+                </pa-action>
+                <pa-action onclick="hide_rename_page()" style="border-radius: 5px;margin: 5px;display: none;">
+                    <i class="fi fi-sr-cross"></i>
+                </pa-action>
+                <pa-action onclick="delete_page()" class="red_a">
+                    <i class="fi fi-sr-trash"></i>
+                </pa-action>
+                <pa-action onclick="show_add_page(this)">
+                    <i class="fi fi-sr-plus"></i>
+                </pa-action>
+                <add-page style="display: none ;">
+                    <input  maxlength="15" id="en_add_page_input" placeholder="Page Name">
+                    <i onclick="add_celems()" style="font-size: 12px;" class="fi fi-sr-check action-bar-i"></i>
+                    <i onclick="hide_add_page()" style="font-size: 15px;" class="fi fi-sr-cross-small action-bar-i"></i>
+                </add-page>
+                <pa-action id="setHome" onclick="toggle_home()">
+                    <i class="fi fi-sr-home"></i>
+                </pa-action>
+            </page-actions>
+        </div>
+        <pages-dropdown class="hidden" id="pg-en-drop">
+            <p-item>Home</p-item>
+            <p-item>About</p-item>
+            <p-item>Policy</p-item>
+        </pages-dropdown>
+        <div class="en-top-bar-right">
+            <tabs>
+                <tab style="display: none ;">
+                    <tab-i><i class="fi fi-sr-duplicate"></i></tab-i>
+                    <tan-name>Pages</tan-name>
+                </tab>
+                <tab onclick="switch_tab(0);setUpEditTab()" class="tab-active">
+                    <tab-i><i class="fi fi-sr-pen-square"></i></tab-i>
+                    <tan-name>Edit</tan-name>
+                </tab>
+                <tab onclick="switch_tab(1);setUpStyleTab()">
+                    <tab-i><i class="fi fi-sr-pencil-paintbrush"></i></tab-i>
+                    <tan-name>Styles </tan-name>
+                </tab>
+                <tab onclick="switch_tab(2);setUpAnimTab()">
+                    <tab-i><i class="fi fi-sr-animated-icon"></i></tab-i>
+                    <tan-name>Animation</tan-name>
+                </tab>
+                <tab onclick="setUpMediaTab(this)">
+                    <tab-i><i class="fi fi-sr-copy-image "></i></tab-i>
+                    <tan-name>Media</tan-name>
+                </tab>
+            </tabs>
+            <div style="display: flex;justify-content: right;height: 100%;align-items: center;flex-direction: row;">
+                <divide></divide>
+                <button id="en-save-data" style="width: 125px;margin: 10px;">Save</button>
+            </div>
+        </div>
+    </div>
+   
+    <div class="en-below-bars">
+        <tg-msg class="hidden">
+            <msg>
+                Add New page to starting Editing
+            </msg>
+        </tg-msg>
+        <viewport>
+            <left-tab>
+
+                <overlay>
+                    <overlay-msg>Select a Block to set as Parent</overlay-msg>
+                    <button onclick="cancel_move()">Cancel</button>
+                </overlay>
+                <view-tabs>
+                    <view-tab onclick="switch_ui(0)" class="v-tab-active" style="border-top-left-radius: 10px;">
+                        <p>DESIGN</p>
+                    </view-tab>
+                    <view-tab onclick="switch_ui(1)">
+                        <p>EDIT</p>
+                    </view-tab>
+                </view-tabs>
+
+                <tab-div class="edit-tabs">
+                    <input maxlength="15" oninput="filter_blocks(this.value)" placeholder="Search Blocks">
+                    <blocks>
+
+                        <block>
+                            Heading
+                        </block>
+                        <block>
+                            Paragraph
+                        </block>
+                    </blocks>
+                </tab-div>
+
+                <tab-div style="display: none;" class="edit-tabs">
+                    <dropdown onclick="toggle_dropdown('en_property_drop');list_property()" class="button-menu">
+                        <p>Add Property</p>
+                    </dropdown>
+                    <dropdown-menu class="hidden" id="en_property_drop">
+
+                        <input maxlength="15" oninput="filter_prop(this.value)" placeholder="Search">
+                        <menu-c>
+
+                        </menu-c>
+                    </dropdown-menu>
+
+                    <property-div class="property-container">
+                        <property-h>Class</property-h>
+                        <dropdown id="main-drop-class" onclick="toggle_dropdown('drop-class')">
+                            <p>Select Class</p>
+                            <i class="fi fi-sr-caret-down"></i>
+                        </dropdown>
+                        <dropdown-menu class="property-dropdown hidden" id='drop-class' value="` + this.value + `">
+                        </dropdown-menu>
+                    </property-div>
+
+                    <property-cont>
+                        <property-div>
+                            <property-h>
+                                <p>Content</p>
+                            </property-h>
+                            <property>
+                                <input placeholder="Content">
+                            </property>
+                        </property-div>
+
+                        <property-action>
+                            <p-action>
+                                remove Property
+                            </p-action>
+                        </property-action>
+                        <property-div>
+                            <property-h>
+                                <p>Style</p>
+                            </property-h>
+                            <property>
+                                <dropdown>
+                                    <p>Regular</p>
+                                    <i class="fi fi-sr-caret-down"></i>
+                                </dropdown>
+                                <dropdown-menu>
+                                    <item>
+                                        <p>Regular</p>
+                                    </item>
+                                    <item>
+                                        Bold
+                                    </item>
+                                    <item>
+                                        Italic
+                                    </item>
+                                </dropdown-menu>
+                            </property>
+                        </property-div>
+
+                        <property-action>
+                            <p-action>
+                                remove Property
+                            </p-action>
+                        </property-action>
+                    </property-cont>
+                </tab-div>
+
+
+            </left-tab>
+
+            <left-tab style="display: none;">
+
+                <view-tabs>
+                    <view-tab onclick="class_switch_ui(0)" class="v-tab-active" style="border-top-left-radius: 10px;">
+                        <p>STYLES</p>
+                    </view-tab>
+                    <view-tab onclick="class_switch_ui(1)">
+                        <p>EDIT</p>
+                    </view-tab>
+                    <view-tab onclick="class_switch_ui(2)">
+                        <p>LISTENERS</p>
+                    </view-tab>
+                </view-tabs>
+
+                <tab-div class="class-tabs">
+                    <input maxlength="15" oninput="load_classes(this.value)" placeholder="Search Class">
+                    <blocks id="en_class_tab">
+
+                        <block>
+                            Heading
+                        </block>
+                        <block>
+                            Paragraph
+                        </block>
+                    </blocks>
+                </tab-div>
+
+                <tab-div class="class-tabs" style="display: none;">
+                    <dropdown id="en_class_drop_bt"
+                        onclick="toggle_dropdown('en_class_property_drop');list_property_class(1)" class="button-menu">
+                        <p>Add Property</p>
+                    </dropdown>
+                    <dropdown-menu class="hidden" id="en_class_property_drop">
+
+                        <input maxlength="15" oninput="filter_class(this.value)" placeholder="Search">
+                        <menu-c>
+
+                        </menu-c>
+                    </dropdown-menu>
+
+
+                    <property-cont id="en_class_cont">
+                        <property-div>
+                            <property-h>
+                                <p>Content</p>
+                            </property-h>
+                            <property>
+                                <input placeholder="Content">
+                            </property>
+                        </property-div>
+
+                        <property-action>
+                            <p-action>
+                                remove Property
+                            </p-action>
+                        </property-action>
+                        <property-div>
+                            <property-h>
+                                <p>Style</p>
+                            </property-h>
+                            <property>
+                                <dropdown>
+                                    <p>Regular</p>
+                                    <i class="fi fi-sr-caret-down"></i>
+                                </dropdown>
+                                <dropdown-menu>
+                                    <item>
+                                        <p>Regular</p>
+                                    </item>
+                                    <item>
+                                        Bold
+                                    </item>
+                                    <item>
+                                        Italic
+                                    </item>
+                                </dropdown-menu>
+                            </property>
+                        </property-div>
+
+                        <property-action>
+                            <p-action>
+                                remove Property
+                            </p-action>
+                        </property-action>
+                    </property-cont>
+                </tab-div>
+                <tab-div class="class-tabs" style="display: none;">
+                    <dropdown id="en_class_drop_bt"
+                        onclick="toggle_dropdown('en_class_listen_drop');list_listen_class()" class="button-menu">
+                        <p>Add Listener</p>
+                    </dropdown>
+                    <dropdown-menu class="hidden" id="en_class_listen_drop">
+
+                        <input maxlength="15" oninput="filter_listen(this.value)" placeholder="Search">
+                        <menu-c>
+
+                        </menu-c>
+                    </dropdown-menu>
+                    <property-cont id="en_listen_cont">
+                    </property-cont>
+
+                </tab-div>
+
+            </left-tab>
+
+            <left-tab style="display: none ;">
+
+
+                <view-tabs>
+                    <view-tab onclick="anim_switch_ui(0)" class="v-tab-active" style="border-top-left-radius: 10px;">
+                        <p>ANIMATIONS</p>
+                    </view-tab>
+                    <view-tab onclick="anim_switch_ui(1)">
+                        <p>KEYFRAME</p>
+                    </view-tab>
+                </view-tabs>
+
+                <tab-div class="anim-tabs">
+                    <input maxlength="15" oninput="list_anims(this.value)" placeholder="Search Animations">
+                    <blocks id="en-anim-l">
+
+                        <block>
+                            Heading
+                        </block>
+                        <block>
+                            Paragraph
+                        </block>
+                    </blocks>
+                </tab-div>
+
+                <tab-div class="anim-tabs" style="display: none;">
+                    <block-h id="en_anim_currrent_t" style='margin:5px;'>Animation: </block-h>
+                    <time-control style="display: none;">
+                        <i onclick="prev_key()" class="fi fi-sr-caret-left"></i>
+                        <c-at>0%</c-at>
+                        <i onclick="next_key()" class="fi fi-sr-caret-right"></i>
+                    </time-control>
+                    <button onclick="add_key()" id="en_anim_add_key_bt" style="margin-top: 10px;">Add Keyframe</button>
+                    <button onclick="del_key()" id="en_anim_del_key_bt" class="delete_bt"
+                        style="margin-top: 10px;">Delete
+                        Keyframe</button>
+                    <dropdown style="display: none;" id="en_anim_drop_bt"
+                        onclick="toggle_dropdown('en_anim_property_drop');list_property_anim()" class="button-menu">
+                        <p>Add Property</p>
+                    </dropdown>
+                    <dropdown-menu style="margin-top: 155px;" class="hidden" id="en_anim_property_drop">
+
+                        <input maxlength="15" oninput="filter_anim(this.value)" placeholder="Search">
+                        <menu-c>
+
+                        </menu-c>
+                    </dropdown-menu>
+
+
+                    <property-cont id="en_anim_cont">
+                        <property-div>
+                            <property-h>
+                                <p>Content</p>
+                            </property-h>
+                            <property>
+                                <input placeholder="Content">
+                            </property>
+                        </property-div>
+
+                        <property-action>
+                            <p-action>
+                                remove Property
+                            </p-action>
+                        </property-action>
+                        <property-div>
+                            <property-h>
+                                <p>Style</p>
+                            </property-h>
+                            <property>
+                                <dropdown>
+                                    <p>Regular</p>
+                                    <i class="fi fi-sr-caret-down"></i>
+                                </dropdown>
+                                <dropdown-menu>
+                                    <item>
+                                        <p>Regular</p>
+                                    </item>
+                                    <item>
+                                        Bold
+                                    </item>
+                                    <item>
+                                        Italic
+                                    </item>
+                                </dropdown-menu>
+                            </property>
+                        </property-div>
+
+                        <property-action>
+                            <p-action>
+                                remove Property
+                            </p-action>
+                        </property-action>
+                    </property-cont>
+                </tab-div>
+
+            </left-tab>
+            <right-tab>
+                <bar>
+                    <action-bar>
+                        <action><i class="fi fi-sr-undo-alt"></i></action>
+                        <action><i class="fi fi-sr-redo-alt"></i></action>
+                        <divide></divide>
+
+                        <element-details>
+                            <element-name>Page</element-name>
+                            <element-action onclick="show_rename()" style="font-size: 12px;margin-left: 5px;"><i
+                                    class="fi fi-sr-pencil"></i></element-action>
+                            <element-action onclick="rename_element()"
+                                style="font-size: 12px;display: none;margin-left: 5px;"><i
+                                    class="fi fi-sr-check"></i></element-action>
+                            <element-action onclick="hide_rename()" style="font-size: 15px;display: none;"><i
+                                    class="fi fi-sr-cross-small"></i></element-action>
+                        </element-details>
+
+                        <button id="add_en_style_bt" style="display: none;" onclick="show_add_class(this)">
+                            <p>New Class</p>
+                        </button>
+                        <add-class style="display: none ;">
+                            <input maxlength="15" id="en_add_class_input" placeholder="Class Name">
+                            <i onclick="add_class()" style="font-size: 12px;" class="fi fi-sr-check action-bar-i"></i>
+                            <i onclick="hide_add_class()" style="font-size: 15px;"
+                                class="fi fi-sr-cross-small action-bar-i"></i>
+                        </add-class>
+                        <button style="display: none ;" id="add_en_anim_bt" onclick="show_add_anim(this)">
+                            <p>New Animation</p>
+                        </button>
+                        <add-anim style="display: none ;">
+                            <input maxlength="15" id="en_add_anim_input" placeholder="Animation Name">
+                            <i onclick="add_anim()" style="font-size: 12px;" class="fi fi-sr-check action-bar-i"></i>
+                            <i onclick="hide_add_anim()" style="font-size: 15px;"
+                                class="fi fi-sr-cross-small action-bar-i"></i>
+                        </add-anim>
+                    </action-bar>
+                    <action-bar class="action_middle">
+                        <action onclick="zoom_i_live()"><i class="fi fi-sr-plus"></i></action>
+                        <action-t>100%</action-t>
+                        <action onclick="zoom_o_live()"><i class="fi fi-sr-minus"></i></action>
+                        <action onclick="full_screen()" style="font-size: 15px;"><i class="fi fi-sr-expand"></i>
+                        </action>
+                        <divide></divide>
+                        <action onclick="change_prespective('en-live-page',0,this)" class="action-active"
+                            style="font-size: 15px;"><i class="fi fi-sr-computer"></i></action>
+                        <action onclick="change_prespective('en-live-page',1,this)" style="font-size: 15px;"><i
+                                class="fi fi-sr-tablet"></i></action>
+                        <action onclick="change_prespective('en-live-page',2,this)" style="font-size: 15px;"><i
+                                class="fi fi-sr-mobile-notch"></i></action>
+
+                    </action-bar>
+                </bar>
+                <live ondrop="en_drop(event)" ondragover="en_allowDrop(event)" ondragleave="en_endDrop(event)"
+                    ondragend="en_endDrop(event)" class="en-live-page" id="en-live-page">
+
+                </live>
+                <bottom-tab style="display: none ;">
+                    <input id="en_anim_slider" oninput="change_key(this.value)" value="0" min="0" maxlength="100"
+                        type="range">
+                    <timeline>
+                        <at style="margin-left: 5px;text-align: left;">0%</at>
+                        <at style="text-align: center;">50%</at>
+                        <at style="text-align: right;">100%</at>
+                    </timeline>
+                    <keys></keys>
+                </bottom-tab>
+            </right-tab>
+        </viewport>
+
+        <viewport class="medias" style="display: none ;">
+            <media-port>
+                <media-top-bar>
+                    <button onclick="init_upload_img()">Upload Image</button>
+                </media-top-bar>
+                <media-view>
+                    <m-c ondragover="en_allowDrop(event )" ondrop="import_droped(event)">
+                        <media-list>
+
+                        </media-list>
+                    </m-c>
+                    <media-action>
+                        <image-h id="image-h-r">Default.jpg</image-h>
+                        <actions-i>
+
+                            <button id="image-r-bt" style="margin-left: 15px;"
+                                onclick="show_rename_media()">Rename</button>
+                            <i id="image-c-bt" style="font-size: 10px ;display: none;margin-left: 15px;"
+                                class="fi fi-sr-check action-bt" onclick="rename_media()"></i>
+                            <i id="image-n-bt" style="font-size: 12px ;display: none;"
+                                class="fi fi-sr-cross-small action-bt" onclick="hide_rename_media()"></i>
+                            <button id="image-d-bt" style="margin-left: 5px;" class="red_bt"
+                                onclick="delete_media()">Delete</button>
+                        </actions-i>
+                    </media-action>
+                </media-view>
+            </media-port>
+        </viewport>
+
+        <viewport style="display: none ;">
+            <page-list>
+                <page>
+                    <page-detail>
+                        <page-h>Home</page-h>
+                    </page-detail>
+                    <page-actions>
+                        <p-action>
+                            <i class="fi fi-sr-pencil"></i>
+                            <p-t>Rename</p-t>
+                        </p-action>
+                        <p-action style="border-radius: 5px;margin: 5px;display: none;">
+                            <i class="fi fi-sr-check"></i>
+                        </p-action>
+                        <p-action style="border-radius: 5px;margin: 5px;display: none;">
+                            <i class="fi fi-sr-cross"></i>
+                        </p-action>
+                        <p-action class="red_a">
+                            <i class="fi fi-sr-trash"></i>
+                            <p-t>Delete</p-t>
+                        </p-action>
+                    </page-actions>
+                </page>
+            </page-list>
+        </viewport>
+    </div>
+    <window class="hidden">
+        <wdialog>
+            <dialog-h>
+                <p>Media</p>
+                <i onclick="toggle_en_media()" class="fi fi-sr-cross-small"></i>
+            </dialog-h>
+            <window-content>
+
+            </window-content>
+        </wdialog>
+    </window>
+    <fullscreen id="fullscreen-div" style="display: none; ">
+
+    </fullscreen>
+</body>
+<script type="module" async>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { getStorage, ref, getDownloadURL, uploadBytes, deleteObject } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+
+    try {
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWIe4z785-9zR-SJ8k9yO2X2-qSvkgj5I",
+            authDomain: "web-engine-1569c.firebaseapp.com",
+            projectId: "web-engine-1569c",
+            storageBucket: "web-engine-1569c.appspot.com",
+            messagingSenderId: "842865177382",
+            appId: "1:842865177382:web:8f09c2a0123b8d24c1c7e7",
+            measurementId: "G-CS8JQKB049"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const queryString = window.location.search;
+        const storage = getStorage();
+
+        const storageRef = ref(storage);
+        const urlParams = new URLSearchParams(queryString);
+
+
+        var imgs = []
+        var email = localStorage.getItem("email")
+        var isOffline = localStorage.getItem("isOffline")
+
+        load_data()
+        document.getElementById("dbt").onclick = f_delete_media
+        document.getElementById("ibt").onclick = save_img
+        document.getElementById("lbt").onclick = load_page_image
+        function f_delete_media() {
+            const desertRef = ref(storage, 'images/' + email + '/' + pid + "/" + selmedia);
+
+            deleteObject(desertRef).then(() => {
+                console.log("deleted")
+            }).catch((error) => {
+            });
+        }
+
+
+        async function load_data() {
+            if (isOffline == "n") {
+                const docRef = doc(db, "users", email);
+                const docSnap = await getDoc(docRef);
+                data = docSnap.data()
+            } else {
+                data = JSON.parse(localStorage.getItem("user_data"))
+            }
+
+            if (data.customelems != null && Object.keys(data.customelems).length != 0) {
+                pages = Object.keys(data.customelems)
+                currentPage = pages[0]
+                pageData = data.customelems[currentPage]
+                load_page_image()
+                if (data.customelems[currentPage].elements != null && Object.keys(data.customelems[currentPage].elements).length != 0) {
+                    pageElements = createDict(pageData.elements.key, pageData.elements.value)
+                    pageClasses = createDict(pageData.classes.key, pageData.classes.value)
+                    pageAnim = createDict(pageData.animations.key, pageData.animations.value)
+                    load_page_data()
+                } else {
+                    data.customelems={}
+                    set_up_page()
+
+                }
+            } else {
+                show_tg("Create new Element to start Editing")
+            }
+            load_list()
+            list_anims()
+            load_classes()
+            toggle_splash()
+            load_cpages()
+            create_default_classes()
+            load_list()
+        }
+
+        function toggle_splash() {
+            document.getElementsByTagName("splash")[0].style.display = "none"
+        }
+
+        function createDict(keys, values) {
+            let obj = {};
+            for (let i = 0; i < keys.length; i++) {
+                obj[keys[i]] = values[i] != undefined ? values[i] : null;
+            }
+            return obj
+        }
+        function mapReplacer(key, value) {
+            if (value instanceof Map) {
+                return Object.fromEntries(value.entries());
+            }
+
+            return value;
+        }
+        window.addEventListener("beforeunload", () => { save_page_data() })
+
+        async function save_page_data() {
+            console.log(elements)
+            var elem_dic = {}
+            var elem_key = []
+            var elem_value = []
+            for (const [k, v] of Object.entries(elements)) {
+                elem_value.push(JSON.parse(JSON.stringify(v)))
+                elem_key.push(k)
+            }
+            elem_dic.key = elem_key
+            elem_dic.value = elem_value
+
+
+
+            var class_dic = {}
+            var class_key = []
+            var class_value = []
+            for (const [k, v] of Object.entries(classes)) {
+                class_value.push(JSON.parse(JSON.stringify(v)))
+                class_key.push(k)
+            }
+            class_dic.key = class_key
+            class_dic.value = class_value
+
+
+            var anim_dic = {}
+            var anim_key = []
+            var anim_value = []
+            for (const [k, v] of Object.entries(animations)) {
+                var o = JSON.parse(JSON.stringify(v))
+                anim_value.push(o)
+                var key = {}
+                for (const [a, b] of Object.entries(v.keyframes)) {
+                    key[a] = []
+                    for (const [l, m] of Object.entries(b)) {
+                        key[a].push(JSON.parse(JSON.stringify(m)))
+                    }
+                }
+                anim_value[anim_value.indexOf(o)].keyframes = key
+                console.log(anim_value)
+                anim_key.push(k)
+            }
+            anim_dic.key = anim_key
+            anim_dic.value = anim_value
+
+            data.customelems[currentPage].elements = elem_dic
+            data.customelems[currentPage].classes = class_dic
+            data.customelems[currentPage].animations = anim_dic
+            data.customelems[currentPage].images = Object.keys(images)
+            pageData = data.customelems[currentPage]
+
+            if (isOffline == "n") {
+                const userref = doc(db, "users", email);
+
+                await updateDoc(userref, {
+                    customelems: data.customelems
+                });
+            } else {
+                localStorage.setItem("user_data", JSON.stringify(data))
+            }
+            for (const [k, v] of Object.entries(pages)) {
+                currentPage = v
+                for (const [k, v] of Object.entries(images)) {
+                    selmedia = k
+                    save_img()
+                }
+            }
+        }
+
+        async function load_page_image() {
+            if (data.customelems[currentPage].images != null) {
+                imgs = data.customelems[currentPage].images
+                for (const [k, v] of Object.entries(imgs)) {
+                    await getDownloadURL(ref(storage, 'images/' + email + '/customElements/' + currentPage + "/" + v))
+                        .then((url) => {
+
+                            const xhr = new XMLHttpRequest();
+                            xhr.responseType = 'blob';
+                            xhr.onload = (event) => {
+                                const blob = xhr.response;
+                            };
+                            xhr.open('GET', url);
+
+                            images[v] = url
+                            console.log(images)
+                        })
+                        .catch((error) => {
+                        });
+                }
+            }
+        }
+
+
+        function save_img() {
+            let storageRef = ref(storage, 'images/' + email + '/customElements/' + currentPage + "/" + selmedia);
+            fetch(images[selmedia])
+                .then(res => res.blob())
+                .then(blob => {
+                    uploadBytes(storageRef, blob).then((snapshot) => {
+                    });
+                });
+        }
+
+        document.getElementById("en-save-data").onclick = () => {
+            save_page_data();
+            show_pop_up("Saved");
+        }
+
+        function auto_save() {
+            setTimeout(() => {
+                save_page_data()
+                show_pop_up("Auto Saved")
+                auto_save()
+            }, 480000)
+        }
+        auto_save()
+    } catch (err) {
+        location.reload()
+    }
+</script>
+
+</html>

@@ -8,9 +8,10 @@
     <title>Web Engine</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="./engine/img/web engine logo.png">
 
     <link href="styles/style.css" rel="stylesheet">
-    <script defer type="module" src="js/index.js"></script>
+    <script defer type="module" src="js/index.js" async defer></script>
 </head>
 
 <body>
@@ -27,64 +28,78 @@
         <div class="account_box">
             <div class="login_box">
                 <h2>Welcome Back!</h2>
+                <p class="placeholder">Please Sign in to your Account</p>
                 <input type="email" required placeholder="Email">
                 <input type="password" required placeholder="Password">
                 <button>Log In</button>
                 <p class="error"></p>
-                <div style="display: block;">
-                <input style="display: inline-block;" id="en-420" type="checkbox">
-                <label style="display: inline-block;" for="en-420">Remember this device</label>
+                <div class="acc_ls-con">
+                    <input id="en-420" type="checkbox">
+                    <label for="en-420">Remember this device</label>
                 </div>
-                <p class="acc_ls">Dont have an account?<a>Get Started</a></p>
+                <p class="acc_ls">Dont have an account?<a>Sign Up</a></p>
+                <p class="guest" onclick="set_offline()">Continue as Guest (Offline)</p>
             </div>
             <div class="signup_box hide">
-                <h2>Get Started</h2>
+                <h2>Welcome!</h2>
+                <p class="placeholder">Please Fill all details to Sign up</p>
                 <input type="email" required placeholder="Email">
                 <input type="password" required placeholder="Password">
                 <input type="password" required placeholder="Repeat Password">
-                <button>Get Started!</button>
+                <button>Sign Up</button>
                 <p class="error"></p>
                 <p class="acc_ls">Already have an account?<a>Login</a></p>
+            </div>
+            <div class="guest_box hide">
+                <h2>Welcome!</h2>
+                <p class="placeholder">Please Fill all details to Create an Offline account or import User Data file</p>
+                <input type="email" required placeholder="Email">
+                <input type="password" required placeholder="Password">
+                <input type="password" required placeholder="Repeat Password">
+                <button>Create</button>
+                <button class="imp_bt">Import Data</button>
+                <p class="acc_ls">Have an Account?<a>Login</a></p>
+                <p class="error"></p>
             </div>
         </div>
 
     </div>
-
     <div class="dashboard main">
 
         <div class="dash-bar">
             <div class="dash-head">
-                <h3>Web Engine</h3>
+                <h3 style="margin: 2%;">Web Engine</h3><br>
+                <p>Beta</p>
             </div>
             <div class="dash-action">
-                <button id="en-c-elm-bt">Custom Elements</button>
-                <button id="add-project-bt">New Project</button>
-                <button id="imp-project-bt">Import Project</button>
-                <button id="log-out-bt">Log out</button>
+                <button id="en-c-elm-bt"><i class="fi fi-sr-ballot"></i>Custom Elements</button>
+                <button id="add-project-bt"><i class="fi fi-sr-add-document"></i>New Project</button>
+                <button id="imp-project-bt"><i class="fi fi-sr-upload"></i>Import Project</button>
+                <button id="exp-data-bt"><i class="fi fi-sr-download"></i>Export all Data</button>
+                <button id="log-out-bt"><i class="fi fi-sr-power"></i>Log out</button>
             </div>
         </div>
 
         <div class="projects">
-            
-            
-        </div>
 
+
+        </div>
         <div id="no-projects" class="hide">
             <p style="color: rgb(120, 120, 120);">You have no projects stored in cloud</p>
         </div>
+
 
     </div>
 
     <div class="add-project hide">
         <div class="panel">
-            <div style="flex-direction: row; justify-content: space-between;">
-                
-            <h4 style="text-align: center;width: 100%;">New Project</h4>
-            <i id="close-panel" class="fi fi-rr-cross-small"></i>
+            <div class="top-part-d">
+
+                <h3 style="text-align: center;width: 100%;">Add Project</h3>
+                <i id="close-panel" class="fi fi-rr-cross-small"></i>
             </div>
             <br>
-            <label for="site-name">Site Name:</label>
-            <input id="site-name" placeholder="Site Name">
+            <input id="site-name" placeholder="Website Name">
             <p class="error"></p>
             <button id="add-site-bt">Create</button>
         </div>
