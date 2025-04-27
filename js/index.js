@@ -154,7 +154,7 @@ function down_proj(name) {
 }
 
 function down_web(name) {
-  let new_window = window.open("http://" + location.host + "Web-engine/engine/download?pid=" + name);
+  let new_window = window.open("http://" + location.host + "/Web-engine/engine/download?pid=" + name);
 
 }
 
@@ -177,16 +177,16 @@ async function del_project(name) {
 
 function load_project(name) {
   if (isOflline == "n") {
-    window.location.replace("http://" + location.host + "Web-engine/engine?pid=" + name);
+    window.location.replace("http://" + location.host + "/Web-engine/engine?pid=" + name);
   } else {
     localStorage.setItem("user_data", JSON.stringify(user_data))
-    window.location.replace("http://" + location.host + "Web-engine/engine/offline?pid=" + name);
+    window.location.replace("http://" + location.host + "/Web-engine/engine/offline?pid=" + name);
 
   }
 }
 
 function load_celems() {
-  window.location.replace("http://" + location.host + "Web-engine/engine/customElements");
+  window.location.replace("http://" + location.host + "/Web-engine/engine/customElements");
 }
 
 
