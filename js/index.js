@@ -180,7 +180,7 @@ function load_project(name) {
     window.location.replace("http://" + location.host + "Web-engine/engine?pid=" + name);
   } else {
     localStorage.setItem("user_data", JSON.stringify(user_data))
-    window.location.replace("http://" + location.host + "/engine/offline?pid=" + name);
+    window.location.replace("http://" + location.host + "Web-engine/engine/offline?pid=" + name);
 
   }
 }
