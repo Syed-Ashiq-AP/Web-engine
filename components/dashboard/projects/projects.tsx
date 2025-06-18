@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -157,7 +157,7 @@ const Projects = () => {
 
     const fetchProjects = async () => {
         if (!user) return;
-        const req = await fetch(`/api/projects/list?email=${user.email}`);
+        const req = await fetch(`/api/projects/list?id=${user.id}`);
         const res = await req.json();
         if (res.success) {
             const projects: Project[] = JSON.parse(res.projects);
@@ -168,7 +168,7 @@ const Projects = () => {
         fetchProjects();
     }, [user]);
     const handleAddProject = async () => {
-        if (!addProjectInput.current) return;
+        if (!addProjectInput.current || !user) return;
         const projectName = addProjectInput.current.value;
         if (projectName.length < 4) return;
         const res = await fetch("/api/projects", {
@@ -177,7 +177,7 @@ const Projects = () => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                email: user?.email,
+                id: user.id,
                 name: projectName,
             }),
         });
@@ -283,11 +283,7 @@ const Projects = () => {
                     </div>
                     <div>
                         <Button
-                            className={cn(
-                                "cursor-pointer",
-                                Object.keys(rowSelection).length !==
-                                    data.length && " invisible"
-                            )}
+                            className={"cursor-pointer"}
                             variant={"ghost"}
                             disabled={Object.keys(rowSelection).length === 0}
                         >
